@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Mesan React Native Authentication",
-    "slug": "mesan-react-native-authentication",
+    "name": "Sisters",
+    "slug": "sister",
     "privacy": "public",
     "platforms": [
       "ios",
@@ -22,9 +22,16 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "com.codesisters.sisters",
+      "config": {
+        "googleMapsApiKey": "AIzaSyCJR1nj6ECithUPjHKRnW7zoCKzpANdt6U"
+      }
     },
-    "description": "A React Native app with authentication including Register, Login, Username, Forgot Password and Update Profile using React Hooks and React Context API.",
-    "githubUrl": "https://github.com/MosesEsan/mesan-react-native-authentication-app"
+    "android": {
+      "package": "com.codesisters.sisters",
+      "versionCode": 1
+    },
+    "description": "A React Native app with authentication including Register, Login, Username, Forgot Password and Update Profile using React Hooks and React Context API."
   }
 }
