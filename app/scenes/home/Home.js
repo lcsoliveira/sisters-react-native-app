@@ -19,6 +19,9 @@ export default function Home(props) {
                 handleLogout();
                 navigate('Auth');
             }}/>
+
+            <Button title={"Map"} onPress={() => navigate('Map')} />
         </View>
     );
+    
 }
