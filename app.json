@@ -5,8 +5,7 @@
     "privacy": "public",
     "platforms": [
       "ios",
-      "android",
-      "web"
+      "android"
     ],
     "version": "1.0.1",
     "orientation": "portrait",
@@ -31,7 +30,12 @@
     },
     "android": {
       "package": "com.codesisters.sisters",
-      "versionCode": 1
+      "versionCode": 1,
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBHOyV2RkomNgeil8TjsbHXIkKVJIQFN9s"
+        }
+      }
     },
     "description": "A React Native app with authentication including Register, Login, Username, Forgot Password and Update Profile using React Hooks and React Context API."
   }
