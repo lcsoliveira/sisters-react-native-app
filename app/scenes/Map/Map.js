@@ -6,6 +6,7 @@ import { requestPermissionsAsync, getCurrentPositionAsync } from 'expo-location'
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 import { useAuth } from "../../providers/auth";
+import MapInput from "../../components/MapInput";
 
 export default function Map(props) {
   const { navigate, replace } = props.navigation;
@@ -78,7 +79,7 @@ export default function Map(props) {
       <MapView
         style={styles.map}
         // initialRegion={currentRegion}
-        showsUserLocation={true}
+        // showsUserLocation={true}
         region={currentRegion}
         provider="google"
         onPress={(e) =>
@@ -97,7 +98,7 @@ export default function Map(props) {
       </MapView>
 
       <View style={styles.searchForm}>
-        <TextInput 
+        {/* <TextInput 
             style={styles.searchInput}
             placeholder="Buscar..."
             placeholderTextColor="#999"
@@ -105,7 +106,8 @@ export default function Map(props) {
             autoCorrect={false}
             value=""
             onChangeText={() => {}}
-          />
+          /> */}
+          <MapInput />
           <TouchableOpacity onPress={() => {}} style={styles.loadButton}>
             <Icon name="search" size={20} color="#FFF" />
           </TouchableOpacity>
