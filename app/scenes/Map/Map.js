@@ -12,12 +12,12 @@ export default function Map(props) {
   const { state } = useAuth();
   const user = state.user;
 
-  const [position, setPosition] = useState({
-    latitude: -22.783640,
-    longitude: -47.295551,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  });
+  // const [position, setPosition] = useState({
+  //   latitude: -22.783640,
+  //   longitude: -47.295551,
+  //   latitudeDelta: 0.0922,
+  //   longitudeDelta: 0.0421,
+  // });
 
   const [currentRegion, setCurrentRegion] = useState(null);
 
@@ -26,15 +26,16 @@ export default function Map(props) {
     if (user.contacts.length) {
 
       async function loadInitialPosition() {
-        const { granted } = await requestPermissionsAsync();
-  
-        if (granted) {
+        let { status } = await requestPermissionsAsync();
+
+        if (status === "granted") {
+
           const { coords } = await getCurrentPositionAsync({
             enableHighAccuracy: true,
           });
   
           const { latitude, longitude } = coords;
-  
+
           setCurrentRegion({
             latitude,
             longitude,
@@ -45,12 +46,30 @@ export default function Map(props) {
       }
   
       loadInitialPosition();
-      console.log("Current position IN did mount \n", currentRegion);
     }
 
   }, []);
 
-  // console.log("Current position OUT did mount \n", currentRegion);
+
+  const getCurrentPosition = async () => {
+    const { coords } = await getCurrentPositionAsync({
+      enableHighAccuracy: true,
+    });
+
+    const { latitude, longitude } = coords;
+
+    setCurrentRegion({
+      latitude,
+      longitude,
+      latitudeDelta: 0.04,
+      longitudeDelta: 0.04,
+    })
+  }
+
+
+  if (!currentRegion) {
+    return null;
+  }
 
   if (user.contacts.length) {
 
@@ -58,18 +77,20 @@ export default function Map(props) {
     <View style={styles.container}>
       <MapView
         style={styles.map}
-        region={position}
+        // initialRegion={currentRegion}
+        showsUserLocation={true}
+        region={currentRegion}
         provider="google"
         onPress={(e) =>
-          setPosition({
-            ...position,
+          setCurrentRegion({
+            ...currentRegion,
             latitude: e.nativeEvent.coordinate.latitude,
             longitude: e.nativeEvent.coordinate.longitude,
           })
         }
       >
         <Marker
-          coordinate={position}
+          coordinate={currentRegion}
           title={"Marcador"}
           description={"Testando o marcador no mapa"}
         />
@@ -95,12 +116,12 @@ export default function Map(props) {
           <Icon name="phone" color={"#fff"} size={30} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.locationButton} onPress={() => {}}>
+        <TouchableOpacity style={styles.locationButton} onPress={() => getCurrentPosition()}>
           <Icon name="my-location" color={"#fff"} size={30} />
         </TouchableOpacity>
       </View>
     </View>
-  );
+   );
   }
   
   return navigate('Contacts', {id: user._id})
