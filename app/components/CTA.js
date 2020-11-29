@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
 
     footerText: {
         fontSize: 16,
-        fontFamily: "Helvetica Neue",
+        // fontFamily: "Helvetica Neue",
         color: "#636466"
     },
 
@@ -49,6 +49,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: "#733AC2",
         fontWeight: "500",
-        fontFamily: "Helvetica Neue"
+        // fontFamily: "Helvetica Neue"
     }
 });

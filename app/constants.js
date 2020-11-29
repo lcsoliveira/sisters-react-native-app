@@ -1,8 +1,10 @@
 import React from 'react';
 
 //API URL
-// export const API_URL = 'https://mesannodejsapiwithverification.herokuapp.com/api';
+// export const API_URL = 'https://sisters-api.herokuapp.com/api';
 export const API_URL = 'http://localhost:3000/api';
+// export const API_URL = 'http://192.168.0.105:3000/api';
+
 
 //API End Points
 export const REGISTER = `${API_URL}/auth/register`;

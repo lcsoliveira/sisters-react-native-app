@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
         fontSize: 25,
         color: "#362068",
         fontWeight: "400",
-        fontFamily: "Helvetica Neue"
+        // fontFamily: "Helvetica Neue"
     },
 
     errorText:{
