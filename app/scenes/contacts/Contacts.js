@@ -6,11 +6,14 @@ import {Header, ErrorText} from "../../components/Shared";
 import Form, {TYPES} from 'react-native-basic-form';
 import {Alert, View} from 'react-native';
 
-import { useDispatch } from 'react-redux';
-import { addContacts } from "../../actions/user";
+import { useAuth } from "../../providers/auth";
+
+// import { useDispatch } from 'react-redux';
+// import { addContacts } from "../../actions/user";
+
 
 export default function Contacts(props) {
-    const dispatch = useDispatch();
+    const { state, updateUser } = useAuth();
 
     const { navigation } = props;
     const id =  navigation.dangerouslyGetParent().getParam('id');
@@ -28,7 +31,7 @@ export default function Contacts(props) {
         setLoading(true);
         try {
             const response = await api.addContact(id, data);
-            dispatch(addContacts(response.data.fullUser));
+            updateUser(response.data.fullUser);
             setLoading(false);
             Alert.alert(
                 'Registration Successful',
