@@ -1,7 +1,3 @@
-import { combineReducers } from 'redux';
-
-
-
 //Action Types
 export const LOGGED_IN = `auth/LOGGED_IN`;
 export const LOGGED_OUT = `auth/LOGGED_OUT`;
@@ -30,15 +26,3 @@ const authReducer = (state = initialState, action) => {
 };
 
 export default authReducer;
-
-
-
-export const rootReducer = combineReducers({
-    authReducer
-    // ,[ANOTHER REDUCER], [ANOTHER REDUCER] ....
-})
-
-
-
-
-

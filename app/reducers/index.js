@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import authReducer from "./auth";
-import user from "./user"
+// import authReducer from "./auth";
+import user, * as fromUserReducer from "./user"
 
 
 export default function rootReducer() {
@@ -10,3 +10,5 @@ export default function rootReducer() {
     })
 }
 
+
+export const getUserContactcs = state => fromUserReducer.getUserContactcs(state.user);

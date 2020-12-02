@@ -17,3 +17,5 @@ export default function (state = initialState, action) {
             return state;
     }
 }
+
+export const getUserContactcs = state => state.user?.contacts || {};
