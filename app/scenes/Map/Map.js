@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, TextInput } from "react-native";
 
+import { useDispatch, useSelector } from 'react-redux';
+
 import MapView, { Marker } from "react-native-maps";
 import { requestPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
 import Icon from "react-native-vector-icons/MaterialIcons";
+import Spinner from 'react-native-loading-spinner-overlay';
+
 
 import { useAuth } from "../../providers/auth";
 import MapInput from "../../components/MapInput";
+// import { getUserContactcs } from "../../reducers";
 
 export default function Map(props) {
   const { navigate, replace } = props.navigation;
   const { state } = useAuth();
   const user = state.user;
+
 
   // const [position, setPosition] = useState({
   //   latitude: -22.783640,
@@ -20,6 +26,8 @@ export default function Map(props) {
   //   longitudeDelta: 0.0421,
   // });
 
+
+  const [spinner, setSpinner ] = useState(false);
   const [currentRegion, setCurrentRegion] = useState(null);
 
   useEffect(() => {
@@ -43,6 +51,7 @@ export default function Map(props) {
             latitudeDelta: 0.04,
             longitudeDelta: 0.04,
           })
+          setSpinner(false);
         }
       }
   
@@ -68,11 +77,18 @@ export default function Map(props) {
   }
 
 
-  if (!currentRegion) {
-    return null;
+  if (!currentRegion && user.contacts.length) {
+    return (
+      <View>
+        <Spinner 
+          visible={spinner}
+          textContent={'Loading...'}
+        />
+      </View>
+    );
   }
 
-  if (user.contacts.length) {
+  else if (currentRegion && user.contacts.length) {
 
   return (
     <View style={styles.container}>
@@ -108,9 +124,9 @@ export default function Map(props) {
             onChangeText={() => {}}
           /> */}
           <MapInput />
-          <TouchableOpacity onPress={() => {}} style={styles.loadButton}>
+          {/* <TouchableOpacity onPress={() => {}} style={styles.loadButton}>
             <Icon name="search" size={20} color="#FFF" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
       </View>
 
       <View style={styles.container}>
