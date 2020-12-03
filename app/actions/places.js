@@ -1,6 +1,6 @@
-export const GET_GEOCODING = "place/GET_GEOCODING";
+export const SET_GEOCODING = "places/SET_GEOCODING";
 
-export const addContacts = location => ({
-    type: GET_GEOCODING,
+export const setGeocoding = location => ({
+    type: SET_GEOCODING,
     location
 });
