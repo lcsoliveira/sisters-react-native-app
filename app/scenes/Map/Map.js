@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, TextInput } from "react-native";
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import MapView, { Marker } from "react-native-maps";
 import { requestPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Spinner from 'react-native-loading-spinner-overlay';
 
-
+import { getGeocoding } from "../../services/auth";
 import { useAuth } from "../../providers/auth";
 import MapInput from "../../components/MapInput";
 // import { getUserContactcs } from "../../reducers";
@@ -18,20 +18,10 @@ export default function Map(props) {
   const { state } = useAuth();
   const user = state.user;
 
-
-  // const [position, setPosition] = useState({
-  //   latitude: -22.783640,
-  //   longitude: -47.295551,
-  //   latitudeDelta: 0.0922,
-  //   longitudeDelta: 0.0421,
-  // });
-
-
   const [spinner, setSpinner ] = useState(false);
   const [currentRegion, setCurrentRegion] = useState(null);
 
   useEffect(() => {
-
     if (user.contacts.length) {
 
       async function loadInitialPosition() {
@@ -54,10 +44,8 @@ export default function Map(props) {
           setSpinner(false);
         }
       }
-  
       loadInitialPosition();
     }
-
   }, []);
 
 
@@ -74,6 +62,24 @@ export default function Map(props) {
       latitudeDelta: 0.04,
       longitudeDelta: 0.04,
     })
+  }
+
+
+  const getLocation = async (placeID, details) => { 
+    try {
+      const result = await getGeocoding(placeID, "AIzaSyBZfLoLoy7y-2hQAvM32g0oF69cSKMBGAo");
+      const location = result.data.results[0].geometry.location;
+      
+      setCurrentRegion({
+        latitude: location.lat,
+        longitude: location.lng,
+        latitudeDelta: 0.04,
+        longitudeDelta: 0.04,
+      })
+
+    } catch (error) {
+      console.log(error);
+    }
   }
 
 
@@ -114,19 +120,9 @@ export default function Map(props) {
       </MapView>
 
       <View style={styles.searchForm}>
-        {/* <TextInput 
-            style={styles.searchInput}
-            placeholder="Buscar..."
-            placeholderTextColor="#999"
-            autoCapitalize="words"
-            autoCorrect={false}
-            value=""
-            onChangeText={() => {}}
-          /> */}
-          <MapInput />
-          {/* <TouchableOpacity onPress={() => {}} style={styles.loadButton}>
-            <Icon name="search" size={20} color="#FFF" />
-          </TouchableOpacity> */}
+        <View style={{ flex: 1}}>
+          <MapInput searchLocation={getLocation} />
+        </View>
       </View>
 
       <View style={styles.container}>
@@ -188,6 +184,7 @@ const styles = StyleSheet.create({
   },
 
   searchForm: {
+    flex: 1,
     position: 'absolute',
     top: 20,
     left: 20,

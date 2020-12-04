@@ -13,3 +13,5 @@ export const UPDATE_PROFILE = `${API_URL}/user`;
 export const UPLOAD_IMAGE = `${API_URL}/user/upload`;
 export const CONTACTS = `${API_URL}/user/contacts`;
 export const FORGOT_PASSWORD = `${API_URL}/auth/recover`;
+
+export const GOOGLE_GEOCODING="https://maps.googleapis.com/maps/api/geocode/json?"

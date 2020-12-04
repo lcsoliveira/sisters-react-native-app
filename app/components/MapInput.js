@@ -1,15 +1,14 @@
 import React from 'react';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
+const GooglePlacesInput = (props) => {
 
-const GooglePlacesInput = () => {
+  const { searchLocation } = props;
+
   return (
     <GooglePlacesAutocomplete
-      placeholder='Search'
-      onPress={(data, details = null) => {
-        // 'details' is provided when fetchDetails = true
-        console.log(data, details);
-      }}
+      placeholder='Procurar'
+      onPress={(data, details = null) => searchLocation(data.place_id, details)}
       query={{
         key: 'AIzaSyBxwrxPaiqEXCI1JC-mme0Tf0jB9tgtiWA',
         language: 'pt-BR',
