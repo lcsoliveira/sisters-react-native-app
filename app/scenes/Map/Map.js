@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, TextInput } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Linking, Modal, Button } from "react-native";
 
-import { useSelector } from 'react-redux';
-
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Callout, Marker } from "react-native-maps";
 import { requestPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -11,7 +9,9 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { getGeocoding } from "../../services/auth";
 import { useAuth } from "../../providers/auth";
 import MapInput from "../../components/MapInput";
-// import { getUserContactcs } from "../../reducers";
+
+import StarRating from 'react-native-star-rating';
+
 
 export default function Map(props) {
   const { navigate, replace } = props.navigation;
@@ -20,6 +20,7 @@ export default function Map(props) {
 
   const [spinner, setSpinner ] = useState(false);
   const [currentRegion, setCurrentRegion] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     if (user.contacts.length) {
@@ -47,6 +48,7 @@ export default function Map(props) {
       loadInitialPosition();
     }
   }, []);
+
 
 
   const getCurrentPosition = async () => {
@@ -77,10 +79,41 @@ export default function Map(props) {
         longitudeDelta: 0.04,
       })
 
+      setModalVisible(true);
+
     } catch (error) {
       console.log(error);
     }
   }
+
+  const sendWppMessage = async () => {
+    const { coords } = await getCurrentPositionAsync({
+      enableHighAccuracy: true,
+    });
+
+    const { latitude, longitude } = coords;
+
+    setCurrentRegion({
+      latitude,
+      longitude,
+      latitudeDelta: 0.04,
+      longitudeDelta: 0.04,
+    })
+
+    const link = `https://www.google.com/maps/place/${currentRegion.latitude},${currentRegion.longitude}`;
+
+    Linking.openURL(
+      `https://api.whatsapp.com/send?phone=5519993563898&text=Oi\n${link}`
+    );
+
+  }
+
+  const [starCount, setCount] = useState(3);
+  
+  const onStarRatingPress = rating => {
+    setCount(rating);
+  }
+
 
 
   if (!currentRegion && user.contacts.length) {
@@ -116,7 +149,7 @@ export default function Map(props) {
           coordinate={currentRegion}
           title={"Marcador"}
           description={"Testando o marcador no mapa"}
-        />
+        /> 
       </MapView>
 
       <View style={styles.searchForm}>
@@ -126,13 +159,40 @@ export default function Map(props) {
       </View>
 
       <View style={styles.container}>
-        <TouchableOpacity style={styles.phone} onPress={() => {}}>
+        <TouchableOpacity style={styles.phone} onPress={() => sendWppMessage()}>
           <Icon name="phone" color={"#fff"} size={30} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.locationButton} onPress={() => getCurrentPosition()}>
           <Icon name="my-location" color={"#fff"} size={30} />
         </TouchableOpacity>
+      </View>
+      <View>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>É um local seguro ?</Text>
+              <StarRating
+                disabled={false}
+                maxStars={5}
+                rating={starCount}
+                selectedStar={(rating) => onStarRatingPress(rating)}
+              />
+              <Button 
+                title="Ok"
+                color="#8E4Dff"
+                onPress={() => setModalVisible(!modalVisible)} 
+              /> 
+            </View>
+          </View>
+        </Modal>
       </View>
     </View>
    );
@@ -217,5 +277,31 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 15,
+  },
+
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
   }
 });
