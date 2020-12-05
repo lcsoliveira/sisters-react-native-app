@@ -8,10 +8,6 @@ import {Alert, View} from 'react-native';
 
 import { useAuth } from "../../providers/auth";
 
-// import { useDispatch } from 'react-redux';
-// import { addContacts } from "../../actions/user";
-
-
 export default function Contacts(props) {
     const { state, updateUser } = useAuth();
 
@@ -34,7 +30,7 @@ export default function Contacts(props) {
             updateUser(response.data.fullUser);
             setLoading(false);
             Alert.alert(
-                'Registration Successful',
+                'Contato registrado!!',
                 response.message,
                 [{text: 'OK', onPress: () => navigation.navigate("Map")}],
                 {cancelable: false},
