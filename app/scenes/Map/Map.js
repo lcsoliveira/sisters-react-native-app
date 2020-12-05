@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Linking, Modal, Button } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, TouchableHighlight, Linking, Modal, Button } from "react-native";
 
 import MapView, { Callout, Marker } from "react-native-maps";
 import { requestPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
@@ -11,7 +11,6 @@ import { useAuth } from "../../providers/auth";
 import MapInput from "../../components/MapInput";
 
 import StarRating from 'react-native-star-rating';
-
 
 export default function Map(props) {
   const { navigate, replace } = props.navigation;
@@ -179,17 +178,23 @@ export default function Map(props) {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>É um local seguro ?</Text>
-              <StarRating
-                disabled={false}
-                maxStars={5}
-                rating={starCount}
-                selectedStar={(rating) => onStarRatingPress(rating)}
-              />
-              <Button 
-                title="Ok"
-                color="#8E4Dff"
-                onPress={() => setModalVisible(!modalVisible)} 
-              /> 
+              <View style={{ paddingBottom:20 }}>
+                  <StarRating
+                    disabled={false}
+                    maxStars={5}
+                    fullStarColor="#8E4Dff"
+                    rating={starCount}
+                    selectedStar={(rating) => onStarRatingPress(rating)}
+                  />
+              </View>
+              <View>
+                <TouchableHighlight
+                  style={{ ...styles.openButton }}
+                  onPress={() => { setModalVisible(!modalVisible); setCount(3)}}
+                >
+                  <Text style={styles.textStyle}>Enviar</Text>
+                </TouchableHighlight>
+              </View>
             </View>
           </View>
         </Modal>
@@ -303,5 +308,16 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center"
-  }
+  },
+  openButton: {
+    backgroundColor: "#8E4Dff",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
 });
