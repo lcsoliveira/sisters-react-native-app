@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, TouchableHighlight, Linking, Modal, Button } from "react-native";
 
 import MapView, { Callout, Marker } from "react-native-maps";
-import { requestPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
+import { requestPermissionsAsync, getCurrentPositionAsync, getLastKnownPositionAsync } from 'expo-location';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Spinner from 'react-native-loading-spinner-overlay';
 
@@ -11,6 +11,7 @@ import { useAuth } from "../../providers/auth";
 import MapInput from "../../components/MapInput";
 
 import StarRating from 'react-native-star-rating';
+import { block } from "react-native-reanimated";
 
 export default function Map(props) {
   const { navigate, replace } = props.navigation;
@@ -20,6 +21,7 @@ export default function Map(props) {
   const [spinner, setSpinner ] = useState(false);
   const [currentRegion, setCurrentRegion] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [placeName, setPlaceName] = useState("");
 
   useEffect(() => {
     if (user.contacts.length) {
@@ -33,6 +35,8 @@ export default function Map(props) {
             enableHighAccuracy: true,
           });
   
+          console.log("last location \n", await getLastKnownPositionAsync());
+          
           const { latitude, longitude } = coords;
 
           setCurrentRegion({
@@ -70,7 +74,8 @@ export default function Map(props) {
     try {
       const result = await getGeocoding(placeID, "AIzaSyBZfLoLoy7y-2hQAvM32g0oF69cSKMBGAo");
       const location = result.data.results[0].geometry.location;
-      
+      const placeName = details.structured_formatting.main_text;
+
       setCurrentRegion({
         latitude: location.lat,
         longitude: location.lng,
@@ -79,6 +84,7 @@ export default function Map(props) {
       })
 
       setModalVisible(true);
+      setPlaceName(placeName);
 
     } catch (error) {
       console.log(error);
@@ -86,9 +92,7 @@ export default function Map(props) {
   }
 
   const sendWppMessage = async () => {
-    const { coords } = await getCurrentPositionAsync({
-      enableHighAccuracy: true,
-    });
+    const { coords } = await getLastKnownPositionAsync();
 
     const { latitude, longitude } = coords;
 
@@ -102,7 +106,7 @@ export default function Map(props) {
     const link = `https://www.google.com/maps/place/${currentRegion.latitude},${currentRegion.longitude}`;
 
     Linking.openURL(
-      `https://api.whatsapp.com/send?phone=5519993563898&text=Oi\n${link}`
+      `https://api.whatsapp.com/send?phone=5519993563898&text=Entre em contato urgente\n\n${link}`
     );
 
   }
@@ -132,8 +136,6 @@ export default function Map(props) {
     <View style={styles.container}>
       <MapView
         style={styles.map}
-        // initialRegion={currentRegion}
-        // showsUserLocation={true}
         region={currentRegion}
         provider="google"
         onPress={(e) =>
@@ -144,11 +146,30 @@ export default function Map(props) {
           })
         }
       >
+        {
+          placeName ?
+
+          <Marker
+          coordinate={currentRegion}
+          showCallout
+        >
+          <Callout style={styles.callOut}>
+            <View style={styles.markerText}>
+             <Text style={styles.markerText}>
+                {placeName}
+              </Text>
+            </View>
+          
+          </Callout>
+        </Marker>
+        :
+
         <Marker
           coordinate={currentRegion}
-          title={"Marcador"}
-          description={"Testando o marcador no mapa"}
-        /> 
+        />
+
+        }
+
       </MapView>
 
       <View style={styles.searchForm}>
@@ -320,4 +341,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center"
   },
+  markerBox: { 
+    flex: 1, 
+    flexDirection: 'row',
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  markerText: {
+    textAlign: 'center'
+  },
+  callOut: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
