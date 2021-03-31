@@ -6,7 +6,10 @@ import {Header, ErrorText} from "../../components/Shared";
 import Form, {TYPES} from 'react-native-basic-form';
 import {Alert, View} from 'react-native';
 
+import { useAuth } from "../../providers/auth";
+
 export default function Contacts(props) {
+    const { state, updateUser } = useAuth();
 
     const { navigation } = props;
     const id =  navigation.dangerouslyGetParent().getParam('id');
@@ -24,9 +27,10 @@ export default function Contacts(props) {
         setLoading(true);
         try {
             const response = await api.addContact(id, data);
+            updateUser(response.data.fullUser);
             setLoading(false);
             Alert.alert(
-                'Registration Successful',
+                'Contato registrado!!',
                 response.message,
                 [{text: 'OK', onPress: () => navigation.navigate("Map")}],
                 {cancelable: false},

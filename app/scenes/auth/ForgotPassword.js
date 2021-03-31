@@ -13,7 +13,7 @@ export default function ForgotPassword(props) {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const fields = [{name: 'email', label: 'Email Address', required: true}];
+    const fields = [{name: 'email', label: 'Email', required: true}];
 
     async function onSubmit(state) {
         setLoading(true);
@@ -23,7 +23,7 @@ export default function ForgotPassword(props) {
             setLoading(false);
 
             Alert.alert(
-                'Recover Password',
+                'Recuperar Senha',
                 response.message,
                 [{text: 'OK', onPress: () => navigation.goBack()}],
                 {cancelable: false},
@@ -34,10 +34,10 @@ export default function ForgotPassword(props) {
         }
     }
 
-    let formProps = {title: "Submit", fields, onSubmit, loading };
+    let formProps = {title: "Enviar", fields, onSubmit, loading };
     return (
         <View style={{flex: 1, paddingHorizontal: 16, backgroundColor:"#fff"}}>
-            <Header title={"Recover Password"}/>
+            <Header title={"Recuperar Senha"}/>
             <View style={{flex:1}}>
                 <ErrorText error={error}/>
                 <Form {...formProps}/>

@@ -15,10 +15,10 @@ export default function Register(props) {
     const [loading, setLoading] = useState(false);
 
     const fields = [
-        {name: 'firstName', label: 'First Name', required: true},
-        {name: 'lastName', label: 'Last Name', required: true},
-        {name: 'email', label: 'Email Address', required: true},
-        {name: 'password', label: 'Password', required: true, secure:true}
+        {name: 'firstName', label: 'Primeiro nome', required: true},
+        {name: 'lastName', label: 'Ultimo nome', required: true},
+        {name: 'email', label: 'Email', required: true},
+        {name: 'password', label: 'Senha', required: true, secure:true}
     ];
 
     async function onSubmit(state) {
@@ -28,7 +28,7 @@ export default function Register(props) {
             let response = await api.register(state);
             setLoading(false);
             Alert.alert(
-                'Registration Successful',
+                'Registrado com sucesso',
                 response.message,
                 [{text: 'OK', onPress: () => navigation.replace("Login")}],
                 {cancelable: false},
@@ -39,16 +39,16 @@ export default function Register(props) {
         }
     }
 
-    let formProps = {title: "Register", fields, onSubmit, loading };
+    let formProps = {title: "Cadastrar", fields, onSubmit, loading };
     return (
         <View style={{flex: 1, paddingHorizontal: 16, backgroundColor:"#fff"}}>
-            <Header title={"Register"}/>
+            <Header title={"Cadastro"}/>
             <View style={{flex:1}}>
                 <ErrorText error={error}/>
                 <Form {...formProps}>
                     <CTA
-                        title={"Already have an account?"}
-                        ctaText={"Login"}
+                        title={"Já possui uma conta?"}
+                        ctaText={"Entrar"}
                         onPress={() => navigation.replace("Login")}
                         style={{marginTop: 50}}/>
                 </Form>

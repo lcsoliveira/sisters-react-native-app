@@ -63,10 +63,17 @@ export function handler(err) {
     return new Error(error.message);
 }
 
-
 export async function addContact(id, contacts) {
     try {
         return await axios.put(`${c.CONTACTS}/${id}`, { contacts: [contacts] });
+    } catch (e) {
+        throw handler(e);
+    }
+}
+
+export async function getGeocoding(placeId, key) {
+    try {
+      return await axios.get(`${c.GOOGLE_GEOCODING}place_id=${placeId}&key=${key}`);
     } catch (e) {
         throw handler(e);
     }

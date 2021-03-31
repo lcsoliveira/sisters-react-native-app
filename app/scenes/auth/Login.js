@@ -18,8 +18,8 @@ export default function Login(props) {
     const { handleLogin } = useAuth();
 
     const fields = [
-        {name: 'email', label: 'Email Address', required: true},
-        {name: 'password', label: 'Password', required: true, secure: true}
+        {name: 'email', label: 'Email', required: true},
+        {name: 'password', label: 'Senha', required: true, secure: true}
     ];
 
     async function onSubmit(state) {
@@ -41,21 +41,21 @@ export default function Login(props) {
         }
     }
 
-    let formProps = {title: "Login", fields, onSubmit, loading};
+    let formProps = {title: "Entrar", fields, onSubmit, loading};
     return (
         <View style={{flex: 1, paddingHorizontal: 16, backgroundColor:"#fff"}}>
-            <Header title={"Login"}/>
+            <Header title={"Entrar"}/>
             <View style={{flex: 1}}>
                 <ErrorText error={error}/>
                 <Form {...formProps}>
                     <CTA
-                        ctaText={"Forgot Password?"}
+                        ctaText={"Esqueceu a Senha?"}
                         onPress={() => navigation.navigate("ForgotPassword")}
                         style={{marginTop: 20}}/>
 
                     <CTA
-                        title={"Don't have an account?"}
-                        ctaText={"Register"}
+                        title={"Não tem uma conta?"}
+                        ctaText={"Cadastro"}
                         onPress={() => navigation.replace("Register")}
                         style={{marginTop: 50}}/>
                 </Form>
